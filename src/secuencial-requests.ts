@@ -12,25 +12,27 @@ const request = (url: string) => from(fetch(url).then((res) => res.json()));
 
 const logValue = (prefix: string) => (message?: any) =>
   console.log(prefix, message);
+const logSwitchMapValue = logValue('switchMap value: ');
+const logExpandValue = logValue('expand value: ');
 
 const url = 'https://jsonplaceholder.typicode.com/todos';
 
 // solution 1
 const obs1 = request(`${url}/1`).pipe(
   switchMap((response: Todo) => request(`${url}/${response.id + 1}`)),
-  tap(logValue('switchMap value: ')),
+  tap(logSwitchMapValue),
   switchMap((response: Todo) => request(`${url}/${response.id + 1}`)),
-  tap(logValue('switchMap value: ')),
+  tap(logSwitchMapValue),
   switchMap((response: Todo) => request(`${url}/${response.id + 1}`)),
-  tap(logValue('switchMap value: ')),
+  tap(logSwitchMapValue),
   switchMap((response: Todo) => request(`${url}/${response.id + 1}`)),
-  tap(logValue('switchMap value: '))
+  tap(logSwitchMapValue)
 );
 
 // solution 2
 const obs2 = request(`${url}/1`).pipe(
   expand((response: Todo) => request(`${url}/${response.id + 1}`)),
-  tap(logValue('expand value: ')),
+  tap(logExpandValue),
   take(5)
 );
 
